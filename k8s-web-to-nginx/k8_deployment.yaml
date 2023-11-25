@@ -1,0 +1,27 @@
+# using yaml file is the declarative approach instead of kubectl 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+#this line below is the name of your deployment
+  name: k8s-web-main
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: k8s-web-main
+#this line below refers to POD but we don't specifically call it out
+  template:
+    metadata:
+      labels:
+        app: k8s-web-main
+    spec:
+      containers:
+      - name: k8s-web-main
+# this is comming from https://hub.docker.com/repository/docker/grepit/k8s-web-main/general 
+        image: grepit/k8s-web-main
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "250m"
+        ports:
+        - containerPort: 3000

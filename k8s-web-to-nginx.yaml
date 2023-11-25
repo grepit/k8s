@@ -1,0 +1,40 @@
+## --> here us where we declare deployments
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+#this line below is the name of your deployment
+  name: k8s-web-to-nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: k8s-web-to-nginx
+#this line below refers to POD but we don't specifically call it out
+  template:
+    metadata:
+      labels:
+        app: k8s-web-to-nginx
+    spec:
+      containers:
+      - name: k8s-web-to-nginx
+# this is comming from https://hub.docker.com/repository/docker/grepit/k8s-web-to-nginx/general 
+        image: grepit/k8s-web-to-nginx
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "250m"
+        ports:
+        - containerPort: 3000
+## --> here us where we deploy the servcie
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: k8s-web-to-nginx
+spec:
+  type: LoadBalancer
+  selector:
+    app: k8s-web-to-nginx
+  ports:
+  - port: 3333
+    targetPort: 3000

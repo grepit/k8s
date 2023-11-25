@@ -1,0 +1,38 @@
+## --> here us where we declare deployments
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+#this line below is the name of your deployment
+  name: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+#this line below refers to POD but we don't specifically call it out
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+# this is comming from https://hub.docker.com/repository/docker/grepit/nginx/general 
+        image: nginx
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "250m"
+        ports:
+        - containerPort: 80
+## --> here us where we deploy the servcie
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+spec:
+  selector:
+    app: nginx
+  ports:
+  - port: 80
