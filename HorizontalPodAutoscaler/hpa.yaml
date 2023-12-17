@@ -1,0 +1,20 @@
+# This HPA will ensure that at least 2 pods of the my-app Deployment are always running and can scale up to 5 pods if the average CPU utilization exceeds 80%. 
+# how to run : kubectl apply -f hpa.yaml
+piVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: my-hpa
+spec:
+  target:
+    apiVersion: apps/v1
+    kind: Deployment # Replace with the kind of your workload (Deployment, StatefulSet, etc.)
+    name: my-app
+  minReplicas: 2 # Minimum number of replicas
+  maxReplicas: 5 # Maximum number of replicas
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 80  # Target CPU utilization percentage
